@@ -47,16 +47,18 @@ public class Combo implements Producto
      * El precio está basado en aplicarle el descuento del combo al valor de cada uno de los productos.
      */
     @Override
-    public int getPrecio( )
+    public int getPrecio()
     {
         double precio = 0;
-        for( Producto i : itemsCombo )
+
+        for (Producto i : itemsCombo)
         {
-            precio += i.getPrecio( );
+            precio += i.getPrecio();
         }
 
-        return ( int ) ( precio * descuento );
+        return (int) (precio * (1 - descuento));
     }
+  
 
     /**
      * Genera el texto que debe aparecer en la factura.

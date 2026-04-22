@@ -43,9 +43,16 @@ public class ProductoAjustado implements Producto
      * Retorna el precio del producto ajustado, que debe ser igual al del producto base, sumándole el precio de los ingredientes adicionales.
      */
     @Override
-    public int getPrecio( )
+    public int getPrecio()
     {
-        return 0;
+        int precio = productoBase.getPrecio();
+
+        for (Ingrediente ing : agregados)
+        {
+            precio += ing.getCostoAdicional();
+        }
+
+        return precio;
     }
 
     /**
@@ -54,23 +61,34 @@ public class ProductoAjustado implements Producto
      * El texto incluye el producto base, los ingredientes adicionales con su costo, los ingredientes eliminados, y el precio total
      */
     @Override
-    public String generarTextoFactura( )
+    public String generarTextoFactura()
     {
-        StringBuffer sb = new StringBuffer( );
-        sb.append( productoBase );
-        for( Ingrediente ing : agregados )
+        StringBuffer sb = new StringBuffer();
+
+        sb.append(productoBase.generarTextoFactura());
+
+        for (Ingrediente ing : agregados)
         {
-            sb.append( "    +" + ing.getNombre( ) );
-            sb.append( "                " + ing.getCostoAdicional( ) );
-        }
-        for( Ingrediente ing : eliminados )
-        {
-            sb.append( "    -" + ing.getNombre( ) );
+            sb.append("    +" + ing.getNombre());
+            sb.append("                " + ing.getCostoAdicional());
         }
 
-        sb.append( "            " + getPrecio( ) + "\n" );
+        for (Ingrediente ing : eliminados)
+        {
+            sb.append("    -" + ing.getNombre());
+        }
 
-        return sb.toString( );
+        sb.append("            " + getPrecio() + "\n");
+
+        return sb.toString();
+    }
+    public void agregarIngrediente(Ingrediente ing)
+    {
+        agregados.add(ing);
     }
 
+    public void eliminarIngrediente(Ingrediente ing)
+    {
+        eliminados.add(ing);
+    }
 }
