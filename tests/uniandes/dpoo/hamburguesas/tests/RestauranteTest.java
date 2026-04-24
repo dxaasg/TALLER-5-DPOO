@@ -3,6 +3,7 @@ package uniandes.dpoo.hamburguesas.tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.io.PrintWriter;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,14 +28,9 @@ public class RestauranteTest
         ingredientes = new File("data/ingredientes.txt");
         menu = new File("data/menu.txt");
         combos = new File("data/combos.txt");
-    }
+    } 
 
-    @AfterEach
-    public void tearDown() 
-    {
-        // No es estrictamente necesario aquí,
-        // pero queda como buena práctica por si luego creas archivos
-    }
+    
 
     @Test
     public void testCargarInformacion() throws Exception 
@@ -107,7 +103,66 @@ public class RestauranteTest
         assertEquals("combo corral", restaurante.getMenuCombos().get(0).getNombre());
     }
 
-    
+    @Test
+    void testCargarIngredientesRepetidosLanzaExcepcion() throws Exception {
+        File archivoIngredientesMalos = File.createTempFile("ingredientes_malos", ".txt");
+        archivoIngredientesMalos.deleteOnExit();
+        PrintWriter writerIng = new PrintWriter(archivoIngredientesMalos);
+        writerIng.println("tomate;1000");
+        writerIng.println("tomate;1500"); 
+        writerIng.close(); 
+        File archivoMenu = File.createTempFile("menu", ".txt"); 
+        archivoMenu.deleteOnExit();
+        File archivoCombos = File.createTempFile("combos", ".txt");
+        archivoCombos.deleteOnExit();
+        assertThrows(IngredienteRepetidoException.class, () -> {
+            restaurante.cargarInformacionRestaurante(archivoIngredientesMalos, archivoMenu, archivoCombos);
+        }, "El sistema permitió cargar un archivo txt con ingredientes repetidos y no lanzó la excepción.");
+    }
+    @Test
+    void testCargarMenuRepetido() throws Exception {
+        File menuMalo = File.createTempFile("menu_malo", ".txt");
+        menuMalo.deleteOnExit();
+
+        PrintWriter writer = new PrintWriter(menuMalo);
+        writer.println("hamburguesa;10000");
+        writer.println("hamburguesa;12000"); // repetido
+        writer.close();
+
+        File ingredientesOK = File.createTempFile("ing", ".txt");
+        ingredientesOK.deleteOnExit();
+
+        File combosOK = File.createTempFile("combos", ".txt");
+        combosOK.deleteOnExit();
+
+        assertThrows(ProductoRepetidoException.class, () -> {
+            restaurante.cargarInformacionRestaurante(ingredientesOK, menuMalo, combosOK);
+        });
+    }
+    @Test
+    void testCombosRepetidos() throws Exception {
+        File menuOK = File.createTempFile("menu", ".txt");
+        menuOK.deleteOnExit();
+
+        PrintWriter writerMenu = new PrintWriter(menuOK);
+        writerMenu.println("hamburguesa;10000");
+        writerMenu.close();
+
+        File combosMalos = File.createTempFile("combos_malos", ".txt");
+        combosMalos.deleteOnExit();
+
+        PrintWriter writer = new PrintWriter(combosMalos);
+        writer.println("combo1;10%;hamburguesa");
+        writer.println("combo1;20%;hamburguesa"); // repetido
+        writer.close();
+
+        File ingredientesOK = File.createTempFile("ing", ".txt");
+        ingredientesOK.deleteOnExit();
+
+        assertThrows(ProductoRepetidoException.class, () -> {
+            restaurante.cargarInformacionRestaurante(ingredientesOK, menuOK, combosMalos);
+        });
+    }
 
     
     @Test
