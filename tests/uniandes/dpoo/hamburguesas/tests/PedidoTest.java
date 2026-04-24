@@ -86,7 +86,6 @@ public class PedidoTest
         assertTrue(contenido.contains("Daniel"));
         assertTrue(contenido.contains("Hamburguesa"));
         assertTrue(contenido.contains("11900"));
-        // limpiar archivo después del test
         archivo.delete();
     }
     @Test

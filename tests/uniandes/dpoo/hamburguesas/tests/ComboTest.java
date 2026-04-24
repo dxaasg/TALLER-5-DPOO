@@ -25,8 +25,7 @@ public class ComboTest {
         items.add(new ProductoMenu("Hamburguesa", 10000));
 
         Combo combo = new Combo("Combo 1", 0.1, items);
-
-        // esperado correcto  9000, pero descuento mal aplicado
+ 
         int precio = combo.getPrecio();
 
      }
@@ -42,8 +41,7 @@ public class ComboTest {
 
         int precio = combo.getPrecio();
 
-        // suma = 15000 con 10% debería ser 13500
-        // pero el código da 1500
+        
         assertEquals(13500, precio);
     }
 

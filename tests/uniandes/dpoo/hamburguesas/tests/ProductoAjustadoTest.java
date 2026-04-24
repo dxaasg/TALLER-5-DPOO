@@ -24,7 +24,6 @@ public class ProductoAjustadoTest
         ProductoMenu base = new ProductoMenu("Hamburguesa", 10000);
         ProductoAjustado p = new ProductoAjustado(base);
 
-        // debería ser 10000 pero el código devuelve 0
         assertEquals(10000, p.getPrecio());
     }
 
@@ -34,11 +33,8 @@ public class ProductoAjustadoTest
         ProductoMenu base = new ProductoMenu("Hamburguesa", 10000);
         ProductoAjustado p = new ProductoAjustado(base);
 
-        // si tuvieras forma de agregar ingredientes:
-        // p.agregarIngrediente(new Ingrediente("Queso", 2000));
-
-        // esperado: 12000
-        // actual: 0 → falla
+        
+        
         assertTrue(p.getPrecio() >= 10000);
     }
 
@@ -69,7 +65,6 @@ public class ProductoAjustadoTest
 
         String texto = p.generarTextoFactura();
 
-        // cubre:
         assertTrue(texto.contains("Hamburguesa"));
         assertTrue(texto.contains(String.valueOf(p.getPrecio())));
     }
